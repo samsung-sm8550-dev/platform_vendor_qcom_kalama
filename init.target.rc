@@ -105,6 +105,19 @@ on post-fs-data
     # Enable WLAN cold boot calibration
     write /sys/kernel/cnss/fs_ready 1
 
+on post-fs-data && property:ro.build.type=userdebug && property:ro.baseband=mdm
+    trigger create-ddi-file
+
+on post-fs-data && property:ro.build.type=userdebug && property:ro.baseband=mdm2
+    trigger create-ddi-file
+
+on create-ddi-file
+    # Create directory used for saving DDI
+    mkdir /data/vendor/ddi 0770 system system
+    write /data/vendor/ddi/ddi.bin ""
+    chown system system /data/vendor/ddi/ddi.bin
+    chmod 0660 /data/vendor/ddi/ddi.bin
+
 on early-boot
     start vendor.sensors
 
